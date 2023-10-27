@@ -1,0 +1,51 @@
+################ Explication d'utilisation ! #####################
+
+## Pour ajouter un véhicule ? 
+
+TriggerServerEvent("rGpsCar:addCarGps", l'entité du véhicule, nom du job)
+
+
+
+*Exemple pour job taxi : 
+
+TriggerServerEvent("rGpsCar:addCarGps", vehicle, "taxi")
+
+
+
+*Exemple du rendu en code : 
+
+function spawnVehicleCar(car)
+    local carhash = GetHashKey(car)
+    RequestModel(car)
+    while not HasModelLoaded(car) do
+        RequestModel(car)
+        Citizen.Wait(0)
+    end
+    local vehicle = CreateVehicle(carhash, Config.posSpawnCar, true, false)
+    local plaque = "taxi"..GetPlayerServerId(PlayerId())
+    SetVehicleNumberPlateText(vehicle, plaque)
+    SetPedIntoVehicle(PlayerPedId(), vehicle, -1)
+    TriggerServerEvent("rGpsCar:addCarGps", vehicle, "taxi") -- Voici l'event pour ajouter le véhicule
+end
+
+
+## Pour retirer un véhicule ? 
+
+TriggerServerEvent("rGpsCar:removeGpsCar", l'entité du véhicule)
+
+
+
+*Exemple pour job : 
+
+TriggerServerEvent("rGpsCar:removeGpsCar", vehicle)
+
+
+
+*Exemple du rendu en code :
+
+local veh, dist4 = ESX.Game.GetClosestVehicle()
+if dist4 < 4 then
+    TriggerServerEvent("rGpsCar:removeGpsCar", veh) -- Voici l'event pour retirer le véhicule
+    DeleteEntity(veh)
+    RageUI.CloseAll()
+end
